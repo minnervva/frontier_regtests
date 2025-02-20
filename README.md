@@ -24,21 +24,17 @@ This short readme contains necessary information to run cp2k on Frontier. The la
 - hdf5
 - libsmeagol
 - ROCM 6.3.1
-- grpp (depending)
-- dla-f (present but one regtest fails)
 
 There is an issue with cp2k when more than one MPI rank are assigned to a single GPU and this configuration should be avoided until we figure out with AMD where the problem resides. 
 
 ## Using CP2K on frontier
 
-I compiled two versions of CP2K `clpc3biqq` for `cp2k` without `dla-f` and 
-`7duvxma` for `cp2k` with `dla-f`. The strange string hashes that tell `spack` which version to load (like `module load`). The only function needed from spack is load. To run it add the following in your batch script.
+I compiled two versions of CP2K `jpuppf6ks` for `cp2k`. `dlaf-f` is not included in the build for the time being as the build crashes and performances are still not good. The reasons for the crash are known and will be fixed in the near future. 
 
 ```[bash]
 source  /lustre/orion/chm202/proj-shared/chm202-project.sh
-spack load /clpc3biqq
+spack load /jpuppf6k
 ```
-It will load the version of `cp2k` without `dla-f`. If `dla-f` is needed then change `/clpc3biqq` with `/7duvxma`. Note you will have to change the CP2K input file as I am not sure that dla-f is the default eigensolver. 
 
 ## typical batch script
 
@@ -54,14 +50,20 @@ The following script can be used as a starting point for batch jobs
 #SBATCH -c 4 # OMP threads
 
 source /lustre/orion/chm202/proj-shared/chm202-project.sh
-spack load /clpc3biqq
 
-CP2K_ROOT="/lustre/orion/chm202/proj-shared/apps/linux-sles15-zen3/gcc-13.2.1/cp2k-master-clpc3biqqyyvjipol7sn7roerz5izu6b"
+# this line is needed because I compiled cp2k withlink to this library but the default one is older.
 
+# this is needed because libfabric default is version 1.15. 
+module load libfabric/1.22.0
+
+# default: we load cp2k without dla-f for the time being until I figure out with dla-f team why one cp2k-dlaf test fails
+spack load /jpuppf6k
+
+# it is not needed in practice but I indicate it for reference
+CP2K_ROOT="/lustre/orion/chm202/proj-shared/apps/linux-sles15-zen3/gcc-13.3.0/cp2k-master-jpuppf6ksjgzc7mi2bg3ymymuvswx7rc"
 # two options either call ${CP2K_ROOT}/bin/cp2k.psmp or directly call cp2k.psmp
 
-# the command line is
-
+# the command line is !!!!! CP2K WITHOUT DLAF
 srun --gpus-per-task=1 --gpu-bind=closest ${CP2K_ROOT}/bin/cp2k.psmp -i my_input.inp -o my_input.out
 ```
 
@@ -70,16 +72,11 @@ Of course the runtime parameters `-N`, `-t` `-n`, etc should be adapted to the s
 ## where to get help
 send me an email at `tmathieu@ethz.ch` directly if you have any problem. I will try to reply as fast as I can. 
 
-## Next update
-
-Frontier has a short maintenance window on Feb. 18th with a new version of libfabric that fixes a performance bug. I will recompile CP2K and run the regtests with the new version after the update. The regtests python script and batch script will be available on minnerva github. 
-
 ## Running the regtests
 
-Ideally, all the regtests should be ran every time cp2k is recompiled. These two scripts should help with this. `dask` distributed is also needed as the regtests script is based on dask for managing the different tests. CP2K source code is needed whatever the way CP2K is compiled as the regtests are not part of `CP2K` installation. There are two options at that stage, compile `cp2k` manually or better use `spack`.
-In practice, the only binary needed is `cp2k.psmp` (the unit tests are still missing) to run the tests. If compiled by hand then the environment variable `CP2K_DATA_DIR` should initialized to the path where CP2K pp data are located. 
+Only if you absolutely want to test everything. In general nothing is merged in cp2k github repo if it breaks any of the regtests. I paid special attention to run them and if any member of the team wants to use an updated version; it is probably better I run all these steps for them. Every member also has the option to compile cp2k by hand but i would not recommend it as am initial step. I will provide as much help as I can with the build process. 
 
-If cp2k is compiled with spack then, the easiest is to load the newly compiled version of cp2k with spack (`spack load \xyz`) and then use this script
+
 
 ```[bash]
 #!/bin/bash
@@ -90,9 +87,10 @@ If cp2k is compiled with spack then, the easiest is to load the newly compiled v
 
 source /lustre/orion/chm202/proj-shared/chm202-project.sh
 module load miniforge3
+spack load /jpuppf6
 
 # root where cp2k is installed, or cp2k root source code
-CP2K_ROOT="/lustre/orion/chm202/proj-shared/apps/linux-sles15-zen3/gcc-13.2.1/cp2k-master-clpc3biqqyyvjipol7sn7roerz5izu6b"
+CP2K_ROOT="/lustre/orion/chm202/proj-shared/apps/linux-sles15-zen3/gcc-13.2.1/cp2k-master-jpuppf6ksjgzc7mi2bg3ymymuvswx7rc"
 
 # set CP2K_DATA_DIR variable, redundant when cp2k is compiled with spack
 export CP2K_DATA_DIR=${CP2K_ROOT}/data
