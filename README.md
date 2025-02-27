@@ -29,12 +29,13 @@ There is an issue with cp2k when more than one MPI rank are assigned to a single
 
 ## Using CP2K on frontier
 
-I compiled two versions of CP2K `jpuppf6ks` for `cp2k`. `dlaf-f` is not included in the build for the time being as the build crashes and performances are still not good. The reasons for the crash are known and will be fixed in the near future. 
+I compiled one version of CP2K `jpuppf6ks` for `cp2k`. `dlaf-f` is not included in the build for the time being as the build crashes and performances are still not good. The reasons for the crash are known and will be fixed in the near future. 
 
 ```[bash]
 source  /lustre/orion/chm202/proj-shared/chm202-project.sh
 spack load /jpuppf6k
 ```
+CP2K should be available using the command line `cp2k.psmp`.
 
 ## typical batch script
 
@@ -71,6 +72,39 @@ Of course the runtime parameters `-N`, `-t` `-n`, etc should be adapted to the s
 
 ## where to get help
 send me an email at `tmathieu@ethz.ch` directly if you have any problem. I will try to reply as fast as I can. 
+
+## spack configuration for frontier
+The repository also contains the necessary files for configuring spack. The configuration is not perfect as it does not include yet GPU direct support for instance but it should be fixed in the near future. All configurations files can be found in the spack directory. Copy the `packages.yaml` and `config.yaml` to any desired location and then modify the script `chm202-project.sh` accordingly. The file `config.yaml` also need to be modified, this line in particular
+
+```[python]
+  # This is the path to the root of the Spack install tree.
+  # You can use $spack here to refer to the root of the spack instance.
+  install_tree:
+    root: /lustre/orion/chm202/proj-shared/apps
+```
+
+It is also strongly advised to run the two following commands the first time spack is used 
+
+```[bash]
+module load PrgEnv-gnu
+```
+
+This will ensure that gcc 13.3 is found. One may add an extra `module load gcc-native/12.3` is another compiler is needed.
+
+Compiling cp2k can achieved with the command line
+
+```[bash]
+spack install "cp2k@master%gcc@13.3+rocm+spla+spglib+libint+libxc+cosma+sirius+libvori+pw_gpu+dftd4+smeagol+openmp+hdf5 build_system=cmake smm=libxsmm ^[virtuals=blas,lapack,scalapack] intel-oneapi-mkl@2023+cluster+gfortran+shared threads=openmp ^mpich@3.4 ^sirius@develop+rocm+scalapack+pugixml+fortran+openmp+vdwxc ^spla+rocm ^gsl+pic+shared ^hipfft@6.3.1 ^hipblas@6.3.1 ^rocblas@6.3.1 ^rocfft@6.3.1 ^umpire%gcc ^hip@6.3.1 ^rocsolver@6.3.1 ^libxc@7.0.0 ^hdf5+fortran+shared+hl"
+```
+Removing the double quote will most likely result in strange error messages from spack. It is particularly true when zsh is used as shell. So it is advised to quote the spack specification string. running this command line will takes several minutes or few hours at worst. 
+
+Running 
+```[bash]
+spack find -l
+```
+should return all intalled packages. Running `spack load cp2k` should make cp2k available. 
+
+
 
 ## Running the regtests
 
