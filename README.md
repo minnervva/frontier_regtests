@@ -14,7 +14,7 @@ This short readme contains necessary information to run cp2k on Frontier. The la
 - dbcsr_acc
 - spglib
 - mkl
-- libdftd4
+- dftd4
 - sirius
 - libvori
 - libbqb
@@ -24,20 +24,38 @@ This short readme contains necessary information to run cp2k on Frontier. The la
 - hdf5
 - libsmeagol
 - ROCM 6.3.1
+- spla
 
-There is an issue with cp2k when more than one MPI rank are assigned to a single GPU and this configuration should be avoided until we figure out with AMD where the problem resides. 
-
+# Known issues
+- From internal testing on AMD machines, we found that running cp2k with more than
+one MPI rank per GPU can lead to wrong results. AMD is suggesting that the issue
+is related to the HPE environment itself which is possible. 
+- The first cp2k spack installation referenced `/jpuppf6ks` has a bug that
+  affects molecular dynamics. It is a memory leak in the grid backend that was
+  introduced almost two years ago but never found until Ada reported a crash
+  during MD simulations. This issue does **NOT** affect the results. All single
+  points calculations are numerically correct. More importantly, the bug is
+  fixed and a new version of `cp2k` is available on Frontier. The MD simulations
+  were tested using the H2O benchmarks with a memory check tool to ensure that
+  the problem was not present anymore. The `chm202-project.sh` was modified to
+  reflect these changes. 
+  
 ## Using CP2K on frontier
 
-I compiled one version of CP2K `jpuppf6ks` for `cp2k`. `dlaf-f` is not included in the build for the time being as the build crashes and performances are still not good. The reasons for the crash are known and will be fixed in the near future. 
+The current recommended version of `CP2K` is tagged `/godu5pw`. Your script
+should contain these lines (the comments can be removed) before calling cp2k.
 
 ```[bash]
 source  /lustre/orion/chm202/proj-shared/chm202-project.sh
-spack load /jpuppf6k
+
+# The first version of CP2K is still available for reproducible reasions
+# spack load /jpuppf6ks
+#
+spack load /godu5pw
 ```
 CP2K should be available using the command line `cp2k.psmp`.
 
-## typical batch script
+## Typical batch script
 
 The following script can be used as a starting point for batch jobs
 
@@ -58,10 +76,10 @@ source /lustre/orion/chm202/proj-shared/chm202-project.sh
 module load libfabric/1.22.0
 
 # default: we load cp2k without dla-f for the time being until I figure out with dla-f team why one cp2k-dlaf test fails
-spack load /jpuppf6k
+spack load /godu5pw
 
 # it is not needed in practice but I indicate it for reference
-CP2K_ROOT="/lustre/orion/chm202/proj-shared/apps/linux-sles15-zen3/gcc-13.3.0/cp2k-master-jpuppf6ksjgzc7mi2bg3ymymuvswx7rc"
+CP2K_ROOT="/lustre/orion/chm202/proj-shared/apps/linux-sles15-zen3/gcc-13.3.0/cp2k-master-godu5pwsq2spbkskyemoybp5fs4lj4yq"
 # two options either call ${CP2K_ROOT}/bin/cp2k.psmp or directly call cp2k.psmp
 
 # the command line is !!!!! CP2K WITHOUT DLAF
@@ -70,8 +88,29 @@ srun --gpus-per-task=1 --gpu-bind=closest ${CP2K_ROOT}/bin/cp2k.psmp -i my_input
 
 Of course the runtime parameters `-N`, `-t` `-n`, etc should be adapted to the specific simulation.
 
-## where to get help
-send me an email at `tmathieu@ethz.ch` directly if you have any problem. I will try to reply as fast as I can. 
+## Where to get help
+send me an email at `tmathieu@ethz.ch` directly if you have any problem. I will
+try to reply as fast as I can.
+
+## Compiling CP2K yourselves
+
+The CP2K source code can be found in the following directory:
+`/lustre/orion/chm202/proj-shared/codes/cp2k`. CP2K can be compiled with the
+following commands
+
+```[bash]
+spack load /godu5pw
+spack load cmake@3.31.6
+module load ninja
+cd /lustre/orion/chm202/proj-shared/codes/cp2k
+mkdir build-test
+cd build-test
+cmake -DCP2K_USE_ELPA=NO -DCP2K_USE_DLAF=NO -DCP2K_USE_DEEPMD=NO -DCP2K_USE_PLUMED=NO -DCP2K_USE_LIBTORCH=NO -DCP2K_BLAS_VENDOR=MKL -DCP2K_SCALAPACK_VENDOR=MKL -DCP2K_USE_ACCEL=hip -DCP2K_WITH_GPU=Mi250 -GNinja -DCMAKE_INSTALL_PREFIX=myprettypath -DCMAKE_BUILD_SHARED=NO ..
+ninja -j8
+ninja install
+```
+
+then the `PATH` and `LD_LIBRARY_PATH` variables should be set accordingly.
 
 ## spack configuration for frontier
 The repository also contains the necessary files for configuring spack. The configuration is not perfect as it does not include yet GPU direct support for instance but it should be fixed in the near future. All configurations files can be found in the spack directory. Copy the `packages.yaml` and `config.yaml` to any desired location and then modify the script `chm202-project.sh` accordingly. The file `config.yaml` also need to be modified, this line in particular
@@ -108,7 +147,12 @@ should return all intalled packages. Running `spack load cp2k` should make cp2k 
 
 ## Running the regtests
 
-Only if you absolutely want to test everything. In general nothing is merged in cp2k github repo if it breaks any of the regtests. I paid special attention to run them and if any member of the team wants to use an updated version; it is probably better I run all these steps for them. Every member also has the option to compile cp2k by hand but i would not recommend it as am initial step. I will provide as much help as I can with the build process. 
+Only if you absolutely want to test everything. In general nothing is merged in
+cp2k github repo if it breaks any of the regtests. I paid special attention to
+run them and if any member of the team wants to use an updated version; it is
+probably better I run all these steps for them. Every member also has the option
+to compile cp2k by hand but i would not recommend it as am initial step. I will
+provide as much help as I can with the build process.
 
 
 
@@ -121,10 +165,10 @@ Only if you absolutely want to test everything. In general nothing is merged in 
 
 source /lustre/orion/chm202/proj-shared/chm202-project.sh
 module load miniforge3
-spack load /jpuppf6
+spack load /godu5pw
 
 # root where cp2k is installed, or cp2k root source code
-CP2K_ROOT="/lustre/orion/chm202/proj-shared/apps/linux-sles15-zen3/gcc-13.2.1/cp2k-master-jpuppf6ksjgzc7mi2bg3ymymuvswx7rc"
+CP2K_ROOT="/lustre/orion/chm202/proj-shared/apps/linux-sles15-zen3/gcc-13.2.1/cp2k-master-godu5pwsq2spbkskyemoybp5fs4lj4yq"
 
 # set CP2K_DATA_DIR variable, redundant when cp2k is compiled with spack
 export CP2K_DATA_DIR=${CP2K_ROOT}/data
