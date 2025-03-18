@@ -99,9 +99,12 @@ The CP2K source code can be found in the following directory:
 following commands
 
 ```[bash]
+# load CP2K and all its dependencies
 spack load /godu5pw
 spack load cmake@3.31.6
 module load ninja
+module unload cray-libsci
+
 cd /lustre/orion/chm202/proj-shared/codes/cp2k
 mkdir build-test
 cd build-test
@@ -110,7 +113,7 @@ ninja -j8
 ninja install
 ```
 
-then the `PATH` and `LD_LIBRARY_PATH` variables should be set accordingly.
+then the `PATH` and `LD_LIBRARY_PATH` variables should be set accordingly. 'myprettypath' is the installation directory. 
 
 ## spack configuration for frontier
 The repository also contains the necessary files for configuring spack. The configuration is not perfect as it does not include yet GPU direct support for instance but it should be fixed in the near future. All configurations files can be found in the spack directory. Copy the `packages.yaml` and `config.yaml` to any desired location and then modify the script `chm202-project.sh` accordingly. The file `config.yaml` also need to be modified, this line in particular
@@ -167,11 +170,8 @@ source /lustre/orion/chm202/proj-shared/chm202-project.sh
 module load miniforge3
 spack load /godu5pw
 
-# root where cp2k is installed, or cp2k root source code
-CP2K_ROOT="/lustre/orion/chm202/proj-shared/apps/linux-sles15-zen3/gcc-13.2.1/cp2k-master-godu5pwsq2spbkskyemoybp5fs4lj4yq"
-
-# set CP2K_DATA_DIR variable, redundant when cp2k is compiled with spack
-export CP2K_DATA_DIR=${CP2K_ROOT}/data
+# set CP2K_DATA_DIR variable if you compile cp2k by hand. Do **not** set it when CP2K is compiled with spack
+# export CP2K_DATA_DIR=${CP2K_ROOT}/data
 
 # launch the dask scheduler
 ~/.local/23.11.0-0/bin/dask-scheduler --no-show --scheduler-file scheduler.json > dask-scheduler.out 2>&1 &
@@ -196,8 +196,10 @@ gcc -shared -fPIC -o libfakeintel.so libfakeintel.c
 
 LD_PRELOAD=${CP2K_ROOT}/libfakeintel.so
 
-
+# CP2K source code is available here
 cd /lustre/orion/chm202/proj-shared/codes/cp2k
-python3.10 ./regtests-dask.py --input-dir /lustre/orion/chm202/proj-shared/codes/cp2k --executable "srun -u -N 1 -n 2 -c 4 --gpus-per-task=1 --gpu-bind=closest ${CP2K_ROOT}/bin/cp2k.psmp \$input_file" --scheduler-file scheduler.json
+# some tests are indicated as failed but they are not in practice. mpi io and cp2k do not seem to play nice some time
+
+python3.10 ./regtests-dask.py --input-dir /lustre/orion/chm202/proj-shared/codes/cp2k --executable "srun -u -N 1 -n 2 -c 4 --gpus-per-task=1 --gpu-bind=closest cp2k.psmp \$input_file" --scheduler-file scheduler.json
 ```
 and the `regtests-dask.py` script.
