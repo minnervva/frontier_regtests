@@ -1,0 +1,25 @@
+diff --git a/src/acc/hip/acc_hip.cpp b/src/acc/hip/acc_hip.cpp
+index e8a4ffb634d..72267c1ab96 100644
+--- a/src/acc/hip/acc_hip.cpp
++++ b/src/acc/hip/acc_hip.cpp
+@@ -15,7 +15,7 @@ hipError_t hipHostAlloc(void** ptr, size_t size, unsigned int flags) { return hi
+ hipError_t hipFreeHost(void* ptr) { return hipHostFree(ptr); }
+ #endif
+ 
+-unsigned int hipHostAllocDefault = hipHostMallocDefault;
++//unsigned int hipHostAllocDefault = hipHostMallocDefault;
+ 
+ hiprtcResult hiprtcGetLowLevelCode(hiprtcProgram prog, char* code) { return hiprtcGetCode(prog, code); }
+ 
+diff --git a/src/acc/hip/acc_hip.h b/src/acc/hip/acc_hip.h
+index 33800c01eef..c663e2b2b06 100644
+--- a/src/acc/hip/acc_hip.h
++++ b/src/acc/hip/acc_hip.h
+@@ -91,7 +91,6 @@
+ 
+ extern hipError_t hipHostAlloc(void** ptr, size_t size, unsigned int flags);
+ extern hipError_t hipHostAlloc(void** ptr, size_t size, unsigned int flags);
+-extern unsigned int hipHostAllocDefault;
+ extern hipError_t hipFreeHost(void* ptr);
+ extern hiprtcResult hiprtcGetLowLevelCode(hiprtcProgram prog, char* code);
+ extern hiprtcResult hiprtcGetLowLevelCodeSize(hiprtcProgram prog, size_t* codeSizeRet);
