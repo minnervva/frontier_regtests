@@ -31,7 +31,7 @@ spack:
   - trexio
   - dbcsr+mpi+rocm
   #- greenx
-  - cp2k@master+cosma+dftd4+hdf5+libint+libxc+mpi+openmp+plumed+pw_gpu+sirius+spglib+spla+trexio+smeagol amdgpu_target=gfx90a build_type=Release smm=libxsmm ^[virtuals=blas,lapack,scalapack] intel-oneapi-mkl@2023+cluster+gfortran %gcc@14
+  - cp2k@master+cosma+dftd4+hdf5+libint+libxc+mpi+openmp+plumed+pw_gpu+sirius+spglib+spla+trexio+smeagol+rocm amdgpu_target=gfx90a build_type=Release smm=libxsmm ^[virtuals=blas,lapack,scalapack] intel-oneapi-mkl@2023+cluster+gfortran %gcc@14
   concretizer:
     unify: true
   packages:
