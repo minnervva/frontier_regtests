@@ -1,0 +1,440 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+spack:
+  include: [./config.yaml]
+  # add package specs to the `specs` list
+  specs:
+  - sirius+rocm+fortran+vdwxc+dftd3+dftd4+pugixml+scalapack+shared
+  - libxc@7+fortran build_system=cmake
+  - libint
+  - cosma
+  - cosma+rocm+scalapack+gpu_direct
+  - spla+rocm
+  - libxsmm@1.17
+  - binutils@2.43.1
+  - intel-oneapi-mkl@2023+cluster+gfortran
+  - fftw+openmp+mpi
+  - cray-mpich@8.1.32
+  - libvori
+  - spglib
+  - dftd4
+  - hdf5
+  - trexio
+  - tblite
+  - dbcsr+mpi+rocm
+  - cp2k@2025.2+cosma+dftd4+hdf5+libint+libxc+mpi+openmp+plumed+pw_gpu+sirius+spglib+spla+trexio+smeagol+mpi_f08 build_type=Release smm=libxsmm ^[virtuals=blas,lapack,scalapack] intel-oneapi-mkl@2023+cluster+gfortran
+  concretizer:
+    unify: true
+  packages:
+    groff:
+      externals:
+      - spec: groff@1.22.4
+        prefix: /usr
+    bison:
+      externals:
+      - spec: bison@3.0.4
+        prefix: /usr
+    libfuse:
+      externals:
+      - spec: libfuse@3.10.5
+        prefix: /usr
+    gettext:
+      externals:
+      - spec: gettext@0.20.2
+        prefix: /usr
+    automake:
+      externals:
+      - spec: automake@1.15.1
+        prefix: /usr
+    llvm-amdgpu:
+      externals:
+      - spec: llvm-amdgpu@6.3.1
+        prefix: /opt/rocm-6.3.1
+        extra_attributes:
+          compilers:
+            c: /opt/rocm-6.3.1/bin/amdclang
+            cxx: /opt/rocm-6.3.1/bin/amdclang++
+      - spec: llvm-amdgpu@6.4.1
+        prefix: /opt/rocm-6.4.1
+        extra_attributes:
+          compilers:
+            c: /opt/rocm-6.4.1/bin/amdclang
+            cxx: /opt/rocm-6.4.1/bin/amdclang++
+    libtool:
+      externals:
+      - spec: libtool@2.4.6
+        prefix: /usr
+    rocfft:
+      externals:
+      - spec: rocfft@6.3.1
+        prefix: /opt/rocm-6.3.1
+      - spec: rocfft@6.4.1
+        prefix: /opt/rocm-6.4.1
+    rsync:
+      externals:
+      - spec: rsync@3.2.3
+        prefix: /usr
+    lustre:
+      externals:
+      - spec: lustre@2.15.1.2_cray_67_g786ae12
+        prefix: /sw/frontier/lfs-wrapper/0.0.1
+      - spec: lustre@2.15.1.2_cray_67_g786ae12
+        prefix: /usr
+    rocblas:
+      externals:
+      - spec: rocblas@6.3.1
+        prefix: /opt/rocm-6.3.1
+      - spec: rocblas@6.4.1
+        prefix: /opt/rocm-6.4.1
+    hip:
+      externals:
+      - spec: hip@6.3.1
+        prefix: /opt/rocm-6.3.1
+      - spec: hip@6.4.1
+        prefix: /opt/rocm-6.4.1
+    win-file:
+      externals:
+      - spec: win-file@5.32
+        prefix: /usr
+    rocrand:
+      externals:
+      - spec: rocrand@6.3.1
+        prefix: /opt/rocm-6.3.1
+      - spec: rocrand@6.4.1
+        prefix: /opt/rocm-6.4.1
+    findutils:
+      externals:
+      - spec: findutils@4.8.0
+        prefix: /usr
+    openssh:
+      externals:
+      - spec: openssh@8.4p1
+        prefix: /usr
+    gcc:
+      externals:
+      - spec: gcc@7.5.0 languages='c,c++,fortran'
+        prefix: /usr
+        extra_attributes:
+          compilers:
+            c: /usr/bin/gcc
+            cxx: /usr/bin/g++
+            fortran: /usr/bin/gfortran
+      - spec: gcc@12.3.0 languages='c,c++,fortran'
+        prefix: /usr
+        extra_attributes:
+          compilers:
+            c: /usr/bin/gcc-12
+            cxx: /usr/bin/g++-12
+            fortran: /usr/bin/gfortran-12
+      - spec: gcc@13.2.1 languages='c,c++,fortran'
+        prefix: /usr
+        extra_attributes:
+          compilers:
+            c: /usr/bin/gcc-13
+            cxx: /usr/bin/g++-13
+            fortran: /usr/bin/gfortran-13
+      - spec: gcc@14.2.0 languages='c,c++,fortran'
+        prefix: /usr
+        extra_attributes:
+            compilers:
+                c: /usr/bin/gcc-13
+                cxx: /usr/bin/g++-13
+            fortran: /usr/bin/gfortran-13
+    migraphx:
+      externals:
+      - spec: migraphx@6.3.1
+        prefix: /opt/rocm-6.3.1
+      - spec: migraphx@6.4.1
+        prefix: /opt/rocm-6.4.1
+    diffutils:
+      externals:
+      - spec: diffutils@3.6
+        prefix: /usr
+    xz:
+      externals:
+      - spec: xz@5.2.3
+        prefix: /usr
+    openssl:
+      externals:
+      - spec: openssl@1.1.1l-fips
+        prefix: /usr
+    sed:
+      externals:
+      - spec: sed@4.4
+        prefix: /usr
+    python:
+      externals:
+      - spec: python@3.6.15+bz2+crypt+ctypes~dbm+lzma+pyexpat~pythoncmd+readline+sqlite3+ssl~tkinter+uuid+zlib
+        prefix: /usr
+    roctracer-dev:
+      externals:
+      - spec: roctracer-dev@6.3.1
+        prefix: /opt/rocm-6.3.1
+      - spec: roctracer-dev@6.4.1
+        prefix: /opt/rocm-6.4.1
+    rocm-cmake:
+      externals:
+      - spec: rocm-cmake@6.3.1
+        prefix: /opt/rocm-6.3.1
+      - spec: rocm-cmake@6.4.1
+        prefix: /opt/rocm-6.4.1
+    rocm-prim:
+      externals:
+      - spec: rocm-prim@6.3.1
+        prefix: /opt/rocm-6.3.1
+      - spec: rocm-prim@6.4.1
+        prefix: /opt/rocm-6.4.1
+    perl:
+      externals:
+      - spec: perl@5.26.1~cpanm+opcode+open+shared+threads
+        prefix: /usr
+    cpio:
+      externals:
+      - spec: cpio@2.13
+        prefix: /usr
+    cmake:
+      externals:
+      - spec: cmake@3.20.4
+        prefix: /usr
+    zip:
+      externals:
+      - spec: zip@3.0
+        prefix: /usr
+    file:
+      externals:
+      - spec: file@5.32
+        prefix: /usr
+    gawk:
+      externals:
+      - spec: gawk@4.2.1
+        prefix: /usr
+    hwloc:
+      externals:
+      - spec: hwloc@2.9.0
+        prefix: /usr
+    comgr:
+      externals:
+      - spec: comgr@6.3.1
+        prefix: /opt/rocm-6.3.1
+      - spec: comgr@6.4.1
+        prefix: /opt/rocm-6.4.1
+    hipsolver:
+      externals:
+      - spec: hipsolver@6.3.1
+        prefix: /opt/rocm-6.3.1
+      - spec: hipsolver@6.4.1
+        prefix: /opt/rocm-6.4.1
+    hiprand:
+      externals:
+      - spec: hiprand@6.3.1
+        prefix: /opt/rocm-6.3.1
+      - spec: hiprand@6.4.1
+        prefix: /opt/rocm-6.4.1
+    hipcub:
+      externals:
+      - spec: hipcub@6.3.1
+        prefix: /opt/rocm-6.3.1
+      - spec: hipcub@6.4.1
+        prefix: /opt/rocm-6.4.1
+      - spec: hipcub@6.1.3
+        prefix: /opt/rocm-6.1.3
+    curl:
+      externals:
+      - spec: curl@8.0.1+gssapi+ldap+nghttp2
+        prefix: /usr
+    rocprofiler-dev:
+      externals:
+      - spec: rocprofiler-dev@6.3.1
+        prefix: /opt/rocm-6.3.1
+      - spec: rocprofiler-dev@6.4.1
+        prefix: /opt/rocm-6.4.1
+    rocsparse:
+      externals:
+      - spec: rocsparse@6.3.1
+        prefix: /opt/rocm-6.3.1
+      - spec: rocsparse@6.4.1
+        prefix: /opt/rocm-6.4.1
+    openjdk:
+      externals:
+      - spec: openjdk@11.0.23_9-suse-150000.3.113.1-x8664
+        prefix: /usr
+    ghostscript:
+      externals:
+      - spec: ghostscript@9.52
+        prefix: /usr
+    ruby:
+      externals:
+      - spec: ruby@2.5.9
+        prefix: /usr
+    cray-mpich:
+      externals:
+      - spec: cray-mpich@8.1.31+rocm
+        prefix: /opt/cray/pe/mpich/8.1.31/ofi/gnu/12.3
+        extra_attributes:
+          environment:
+            prepend_path:
+              LD_LIBRARY_PATH: /opt/cray/libfabric/1.22.0/lib64
+      - spec: cray-mpich@8.1.32+rocm
+        prefix: /opt/cray/pe/mpich/8.1.31/ofi/gnu/12.3
+        extra_attributes:
+          environment:
+            prepend_path:
+              LD_LIBRARY_PATH: /opt/cray/libfabric/1.22.0/lib64
+      - spec: cray-mpich@9.0.0+rocm
+        prefix: /opt/cray/pe/mpich/9.0.0/ofi/gnu/12.3
+        extra_attributes:
+          environment:
+            prepend_path:
+              LD_LIBRARY_PATH: /opt/cray/libfabric/1.22.0/lib64
+    autoconf:
+      externals:
+      - spec: autoconf@2.69
+        prefix: /usr
+    m4:
+      externals:
+      - spec: m4@1.4.18
+        prefix: /usr
+    pkg-config:
+      externals:
+      - spec: pkg-config@0.29.2
+        prefix: /usr
+    gnupg:
+      externals:
+      - spec: gnupg@2.2.27
+        prefix: /usr
+    bzip2:
+      externals:
+      - spec: bzip2@1.0.8
+        prefix: /usr
+    hsa-rocr-dev:
+      externals:
+      - spec: hsa-rocr-dev@6.3.1
+        prefix: /opt/rocm-6.3.1
+      - spec: hsa-rocr-dev@6.4.1
+        prefix: /opt/rocm-6.4.1
+    gmake:
+      externals:
+      - spec: gmake@4.2.1
+        prefix: /usr
+    slurm:
+      externals:
+      - spec: slurm@24.05.2
+        prefix: /usr
+    grep:
+      externals:
+      - spec: grep@3.1
+        prefix: /usr
+    coreutils:
+      externals:
+      - spec: coreutils@8.32
+        prefix: /usr
+    rccl:
+      externals:
+      - spec: rccl@6.3.1
+        prefix: /opt/rocm-6.3.1
+      - spec: rccl@6.4.1
+        prefix: /opt/rocm-6.4.1
+    hipblas:
+      externals:
+      - spec: hipblas@6.3.1
+        prefix: /opt/rocm-6.3.1
+      - spec: hipblas@6.4.1
+        prefix: /opt/rocm-6.4.1
+    bash:
+      externals:
+      - spec: bash@4.4.23
+        prefix: /usr
+    miopen-hip:
+      externals:
+      - spec: miopen-hip@6.3.1
+        prefix: /opt/rocm-6.3.1
+      - spec: miopen-hip@6.4.1
+        prefix: /opt/rocm-6.4.1
+    zlib:
+      externals:
+      - spec: zlib@1.2.13
+        prefix: /usr
+    rocm-smi-lib:
+      externals:
+      - spec: rocm-smi-lib@6.3.1
+        prefix: /opt/rocm-6.3.1
+      - spec: rocm-smi-lib@6.4.1
+        prefix: /opt/rocm-6.4.1
+    miopen-opencl:
+      externals:
+      - spec: miopen-opencl@6.3.1
+        prefix: /opt/rocm-6.3.1
+      - spec: miopen-opencl@6.4.1
+        prefix: /opt/rocm-6.4.1
+    tar:
+      externals:
+      - spec: tar@1.34
+        prefix: /usr
+    sqlite:
+      externals:
+      - spec: sqlite@3.44.0+fts~functions+rtree
+        prefix: /usr
+    which:
+      externals:
+      - spec: which@2.21
+        prefix: /usr
+    ncurses:
+      externals:
+      - spec: ncurses@6.1.20180317+termlib abi=6
+        prefix: /usr
+    git:
+      externals:
+      - spec: git@2.35.3+tcltk
+        prefix: /usr
+    hipsparse:
+      externals:
+      - spec: hipsparse@6.3.1
+        prefix: /opt/rocm-6.3.1
+      - spec: hipsparse@6.4.1
+        prefix: /opt/rocm-6.4.1
+    binutils:
+      externals:
+      - spec: binutils@2.40~gold~headers
+        prefix: /opt/cray/pe/cce/17.0.0/binutils/x86_64/x86_64-pc-linux-gnu
+      - spec: binutils@2.41.0~gold~headers
+        prefix: /usr
+    rocsolver:
+      externals:
+      - spec: rocsolver@6.3.1
+        prefix: /opt/rocm-6.3.1
+      - spec: rocsolver@6.4.1
+        prefix: /opt/rocm-6.4.1
+    flex:
+      externals:
+      - spec: flex@2.6.4+lex
+        prefix: /usr
+    rdma-core:
+      externals:
+      - spec: rdma-core@42.0
+        prefix: /usr
+    cce:
+      externals:
+      - spec: cce@17.0.0
+        prefix: /opt/cray/pe/cce/17.0.0
+        extra_attributes:
+          compilers:
+            c: /opt/cray/pe/cce/17.0.0/bin/craycc
+            cxx: /opt/cray/pe/cce/17.0.0/bin/crayCC
+            fortran: /opt/cray/pe/cce/17.0.0/bin/crayftn
+    hipfft:
+      externals:
+      - spec: hipfft@6.4.1
+        prefix: /opt/rocm-6.4.1
+      - spec: hipfft@6.3.1
+        prefix: /opt/rocm-6.3.1
+    libfabric:
+      externals:
+      - spec: libfabric@1.22.0 fabrics=cxi,tcp,udp
+        prefix: /opt/cray/libfabric/1.22.0
+      - spec: libfabric@1.20.1 fabrics=cxi,tcp,udp
+        prefix: /opt/cray/libfabric/1.20.1
+    all:
+      variants: +shared amdgpu_target=gfx90a amdgpu_target_sram_ecc=gfx90a
+      target: [zen3]

@@ -1,0 +1,9 @@
+config:
+  # This is the path to the root of the Spack install tree.
+  # You can use $spack here to refer to the root of the spack instance.
+  install_tree:
+    root: /lustre/orion/chm202/proj-shared/envs/cp2k-2025.2
+repos:
+  builtin:
+    destination: /lustre/orion/proj-shared/chm202/codes/spack-packages
+
