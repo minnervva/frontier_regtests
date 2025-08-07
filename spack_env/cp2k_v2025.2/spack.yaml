@@ -125,23 +125,23 @@ spack:
         prefix: /usr
         extra_attributes:
           compilers:
-            c: /usr/bin/gcc-12
-            cxx: /usr/bin/g++-12
-            fortran: /usr/bin/gfortran-12
+            c: /opt/cray/pe/gcc-native/12/bin/gcc
+            cxx: /opt/cray/pe/gcc-native/12/bin/g++
+            fortran: /opt/cray/pe/gcc-native/14/bin/gfortran
       - spec: gcc@13.2.1 languages='c,c++,fortran'
         prefix: /usr
         extra_attributes:
           compilers:
-            c: /usr/bin/gcc-13
-            cxx: /usr/bin/g++-13
-            fortran: /usr/bin/gfortran-13
+            c: /opt/cray/pe/gcc-native/13/bin/gcc
+            cxx: /opt/cray/pe/gcc-native/13/bin/g++
+            fortran: /opt/cray/pe/gcc-native/13/bin/gfortran
       - spec: gcc@14.2.0 languages='c,c++,fortran'
         prefix: /usr
         extra_attributes:
             compilers:
-                c: /usr/bin/gcc-13
-                cxx: /usr/bin/g++-13
-            fortran: /usr/bin/gfortran-13
+            c: /opt/cray/pe/gcc-native/14/bin/gcc
+            cxx: /opt/cray/pe/gcc-native/14/bin/g++
+            fortran: /opt/cray/pe/gcc-native/14/bin/gfortran
     migraphx:
       externals:
       - spec: migraphx@6.3.1
@@ -238,8 +238,6 @@ spack:
         prefix: /opt/rocm-6.3.1
       - spec: hipcub@6.4.1
         prefix: /opt/rocm-6.4.1
-      - spec: hipcub@6.1.3
-        prefix: /opt/rocm-6.1.3
     curl:
       externals:
       - spec: curl@8.0.1+gssapi+ldap+nghttp2
